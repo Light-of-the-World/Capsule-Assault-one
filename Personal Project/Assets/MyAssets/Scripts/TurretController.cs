@@ -619,7 +619,8 @@ public class TurretController : MonoBehaviour
             }
 
             GameObject projectile = Instantiate(projectilePrefab, spawnPoint.position, spawnPoint.rotation);
-            turretAudio.PlayOneShot(turretFireSound, 1.0f);
+            turretAudio.PlayOneShot(turretFireSound, OptionsSaverScript.Instance.Volume);
+            StatTrackerScript.Instance.BulletsFired++;
 
 
             // Set the layer for the projectile and all its children

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6905373917137778604}
   m_Layer: 13
   m_Name: TurretProjectile_Prefab
-  m_TagString: Untagged
+  m_TagString: TurretBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

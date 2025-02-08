@@ -41,7 +41,7 @@ public class PlayerBullets : MonoBehaviour
     {
         if (collision.collider.CompareTag("Enemy"))
         {
-            collision.collider.GetComponent<EnemyAI>().TakeDamage(playerBulletDamage);
+            collision.collider.GetComponent<EnemyAI>().TakeDamage(playerBulletDamage, gameObject);
             gameManager.PlayHitmarker();
             DestroyPlayerBullet();
         }

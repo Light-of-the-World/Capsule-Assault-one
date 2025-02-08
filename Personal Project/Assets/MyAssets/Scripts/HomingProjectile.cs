@@ -148,7 +148,7 @@ using UnityEngine;
         }
         else if (collision.collider.CompareTag("Enemy"))
         {
-            collision.collider.GetComponent<EnemyAI>().TakeDamage(turretBulletDamage);
+            collision.collider.GetComponent<EnemyAI>().TakeDamage(turretBulletDamage, gameObject);
             Invoke("DestroyProjectile", 0.02f);
         }
         else

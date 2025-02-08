@@ -110,10 +110,11 @@ public class ProjectileScript : MonoBehaviour
         {
             Instantiate(muzzleFlash, attackPoint.position, attackPoint.rotation);
         }
-        attackSource.PlayOneShot(fire, 1.0f);
+        attackSource.PlayOneShot(fire, OptionsSaverScript.Instance.Volume);
 
         bulletsLeft--;
         bulletsShot++;
+        StatTrackerScript.Instance.BulletsFired++;
 
         //Invoke ResetShot
         if(allowInvoke)
@@ -137,7 +138,7 @@ public class ProjectileScript : MonoBehaviour
     {
         reloading = true;
         Invoke("ReloadFinished", reloadTime);
-        attackSource.PlayOneShot(reload, 1.0f);
+        attackSource.PlayOneShot(reload, OptionsSaverScript.Instance.Volume);
     }
 
     private void ReloadFinished()

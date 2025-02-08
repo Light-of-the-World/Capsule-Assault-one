@@ -10,18 +10,25 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject enemyPrefab;
-    public GameObject hitmarker;
+    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private GameObject hitmarker;
     private GameObject[] enemiesToDespawn;
-    public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI healthText;
-    public TextMeshProUGUI moneyText;
-    public TextMeshProUGUI gameOverText;
-    public TextMeshProUGUI healthRegenText;
-    public TextMeshProUGUI waveText;
-    public GameObject pauseScreen;
-    public Button restartButton;
-    public Button mainMenuButton;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI healthText;
+    [SerializeField] private TextMeshProUGUI moneyText;
+    [SerializeField] private TextMeshProUGUI gameOverText;
+    [SerializeField] private TextMeshProUGUI healthRegenText;
+    [SerializeField] private TextMeshProUGUI waveText;
+    [SerializeField] private TextMeshProUGUI applyText;
+    [SerializeField] private TextMeshProUGUI volumeNumText;
+    [SerializeField] private TextMeshProUGUI sensNumText;
+    [SerializeField] private GameObject centerDot;
+    [SerializeField] private GameObject pauseScreen;
+    [SerializeField] private Button restartButton;
+    [SerializeField] private Button mainMenuButton;
+    [SerializeField] private Button applyButton;
+    [SerializeField] private Slider volumeSlider;
+    [SerializeField] private Slider sensSlider;
     private float upperSpawnRangeX = -22f;
     private float lowerSpawnRangeX = 22f;
     private float upperSpawnRangeZ = 0f;
@@ -54,6 +61,10 @@ public class GameManager : MonoBehaviour
         playerHealth = 100;
         healthText.text = "Health: " + playerHealth;
         atFullHealth = true;
+        volumeSlider.value = OptionsSaverScript.Instance.Volume;
+        volumeNumText.text = "" + OptionsSaverScript.Instance.Volume;
+        sensSlider.value = OptionsSaverScript.Instance.Sensitivity;
+        sensNumText.text = "" + OptionsSaverScript.Instance.Sensitivity;
     }
 
     // Update is called once per frame
@@ -72,17 +83,23 @@ public class GameManager : MonoBehaviour
         if (!paused)
         {
             paused = true;
-            pauseScreen.gameObject.SetActive(true);
+            pauseScreen.SetActive(true);
             restartButton.gameObject.SetActive(true);
             mainMenuButton.gameObject.SetActive(true);
+            applyButton.gameObject.SetActive(true);
+            applyText.text = "Apply";
+            centerDot.SetActive(false);
             Time.timeScale = 0f;
         }
         else
         {
             paused = false;
-            pauseScreen.gameObject.SetActive(false);
+            pauseScreen.SetActive(false);
             restartButton.gameObject.SetActive(false);
             mainMenuButton.gameObject.SetActive(false);
+            applyButton.gameObject.SetActive(false);
+            centerDot.SetActive(true);
+
             Time.timeScale = 1f;
         }
     }
@@ -167,6 +184,7 @@ public class GameManager : MonoBehaviour
     public void UpdateScore()
     {
         score += 14 + waveNumber;
+        StatTrackerScript.Instance.TotalScore += 14 + waveNumber;
         scoreText.text = "Score: " + score;
     }
 
@@ -193,19 +211,40 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        isGameOver=true;
-        gameOverText.gameObject.SetActive(true);
-        restartButton.gameObject.SetActive(true);
-        mainMenuButton.gameObject.SetActive(true);
-        enemiesToDespawn = GameObject.FindGameObjectsWithTag("Enemy");
-        foreach (GameObject enemy in enemiesToDespawn)
+        if (!isGameOver)
         {
-            Destroy(enemy);
+            isGameOver=true;
+            StatTrackerScript.Instance.TotalRounds += (waveNumber - 1);
+            if (waveNumber > StatTrackerScript.Instance.HighRound)
+            {
+                StatTrackerScript.Instance.HighRound = waveNumber;
+            }
+            if (score > StatTrackerScript.Instance.HighScore)
+            {
+                StatTrackerScript.Instance.HighScore = score;
+            }
+            gameOverText.gameObject.SetActive(true);
+            restartButton.gameObject.SetActive(true);
+            mainMenuButton.gameObject.SetActive(true);
+            enemiesToDespawn = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach (GameObject enemy in enemiesToDespawn)
+            {
+                Destroy(enemy);
+            }
+            StatTrackerScript.Instance.SaveStats();
         }
     }
 
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void ApplyButtonClicked()
+    {
+        OptionsSaverScript.Instance.Volume = volumeSlider.value;
+        OptionsSaverScript.Instance.Sensitivity = (int)sensSlider.value;
+        OptionsSaverScript.Instance.SaveOptions();
+        applyText.text = "Applied!";
     }
 }

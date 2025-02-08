@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-    public float sensX = 400f;
-    public float sensY = 400f;
     float xRotation;
     float yRotation;
 
@@ -47,8 +45,8 @@ public class CameraControl : MonoBehaviour
         if (gameManager.isGameOver == false)
         {
             //get mouse input
-            float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
-            float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
+            float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * 80f * OptionsSaverScript.Instance.Sensitivity;
+            float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * 80f * OptionsSaverScript.Instance.Sensitivity;
 
             //translate this into rotation
             yRotation += mouseX;

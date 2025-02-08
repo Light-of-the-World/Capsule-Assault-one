@@ -13,6 +13,8 @@ TagManager:
   - PlayerObj
   - TitleEnemy
   - TurretWithScript
+  - PlayerBullet
+  - TurretBullet
   layers:
   - Default
   - TransparentFX

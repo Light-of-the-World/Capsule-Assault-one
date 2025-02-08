@@ -146,6 +146,7 @@ public class PlayerController : MonoBehaviour
                     targetPoint = ray.GetPoint(5); //air
                 targetPoint.y = 0;
                 Instantiate(turret, targetPoint, orientation.rotation);
+                StatTrackerScript.Instance.TurretsPlaced++;
                 gameManager.UpdateMoney(-100);
             }
         }

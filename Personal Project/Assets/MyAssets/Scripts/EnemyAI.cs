@@ -51,7 +51,6 @@ public class EnemyAI : MonoBehaviour
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
         if (!playerInAttackRange) ChasePlayer();
         else AttackPlayer();
-        CheckHealth();
     }
     private void ChasePlayer()
     {
@@ -70,13 +69,14 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damageSource)
+    public void TakeDamage(float damageSource, GameObject gameObject)
     {
         currentHealth -= damageSource;
         currentDamage += damageSource;
+        CheckHealth(gameObject);
     }
 
-    private void CheckHealth()
+    private void CheckHealth(GameObject gameObject)
     {
         if (currentHealth <= 0 && !isDead)
         {
@@ -97,6 +97,10 @@ public class EnemyAI : MonoBehaviour
             }
 
             Invoke("DespawnEnemy", 0.05f);
+            if (gameObject.tag == "PlayerBullet") StatTrackerScript.Instance.EnemiesByGun++;
+            if (gameObject.tag == "TurretBullet") StatTrackerScript.Instance.EnemiesByTurret++;
+            StatTrackerScript.Instance.TotalEnemies++;
+            return;
         }
     }
 
@@ -109,6 +113,7 @@ public class EnemyAI : MonoBehaviour
     {
         gameManager.DecreaseEnemyCount();
         gameManager.UpdateMoney(5);
+        StatTrackerScript.Instance.TotalMoney += 5;
         gameManager.UpdateScore();
         Destroy(gameObject);
     }
